@@ -30,7 +30,7 @@
           state: installed
 ---
   - name: installing the servers
-    host: self-host
+    host: self
     become: yes
     become_user: root
     tasks:
