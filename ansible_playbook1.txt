@@ -1,0 +1,59 @@
+---
+  - name: this is the sample palybook
+    host: web-server
+    become: yes
+    become_user: root
+    tasks:
+      - name: httpd checking the latest version or not
+        yum:
+          name: httpd
+          state: latest
+      - name: httpd running if not already,it wont affect if its running already
+        service:
+          name: httpd
+          state: started
+---
+  - name: this is to vreate a become_user
+    host: user-creation
+    become: yes
+    become_user: root
+    tasks:
+      - name: here creating the user
+        user:
+          name: rohith
+          group: users, admin
+          shell: /bin/bash
+          home: /home/rohith
+      - name: installing httpd
+        yum:
+          name: httpd
+          state: installed
+---
+  - name: installing the servers
+    host: self-host
+    become: yes
+    become_user: root
+    tasks:
+      - name: here installing the tomcat
+        yum:
+          name: tomcat
+          state: latest
+      - name: here running the tomcat
+        service:
+          name: tomcat
+          state: started
+---
+  - name: copying the file from source to destination
+    host: web-logic
+    become: yes
+    become_user: root
+    tasks:
+      - name: copying the files from source to destination
+        ansible.builtin.copy:
+          src: /opt/tomcat/webapps
+          dest: /root/bin
+          owner: rohith
+          group: rohith
+          mode: '0775'
+          backup: yes
+          follow: yes
